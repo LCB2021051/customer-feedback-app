@@ -1,7 +1,23 @@
 // frontend/src/components/Login.js
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("authToken", token);
+
+      window.history.replaceState({}, "", "/");
+
+      navigate("/feedback");
+    }
+  }, [navigate]);
+
   const handleLogin = () => {
     window.open("http://localhost:5000/api/feedback/auth/google", "_self");
   };

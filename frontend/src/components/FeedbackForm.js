@@ -1,5 +1,5 @@
 // frontend/src/components/FeedbackForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const FeedbackForm = () => {
@@ -7,15 +7,31 @@ const FeedbackForm = () => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
 
+  useEffect(() => {
+    // In case the token is appended in the URL (like ?token=XYZ),
+    // we do the same logic as in Login.
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("authToken", token);
+      window.history.replaceState({}, "", "/feedback");
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const feedback = { category, rating, comment };
+    const token = localStorage.getItem("authToken");
 
     try {
-      await axios.post("http://localhost:5000/api/feedback/submit", feedback, {
-        withCredentials: true,
-      });
+      await axios.post(
+        "http://localhost:5000/api/feedback/submit",
+        { category, rating, comment },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert("Feedback submitted successfully!");
       setComment("");
     } catch (err) {

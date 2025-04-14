@@ -1,56 +1,46 @@
+// backend/routes/feedbackRoutes.js
 const express = require("express");
 const passport = require("passport");
-const axios = require("axios");
+const feedbackController = require("../controllers/feedbackController");
 
 const router = express.Router();
 
+// Step 1: Start Google OAuth
 router.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false,
+  })
 );
 
+// Step 2: Google OAuth callback
+// IMPORTANT: here we call feedbackController.googleCallback
 router.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    res.redirect("http://localhost:3000/feedback");
-  }
+  passport.authenticate("google", { failureRedirect: "/", session: false }),
+  feedbackController.googleCallback
 );
 
-router.get("/me", (req, res) => {
-  res.json(req.user);
-});
+// Step 3: Protected route /me (needs JWT)
+router.get(
+  "/me",
+  passport.authenticate("jwt", { session: false }),
+  feedbackController.me
+);
 
-router.post("/submit", async (req, res) => {
-  const { category, rating, comment } = req.body;
-  console.log("Received Feedback:", { category, rating, comment });
+// Step 4: Protected POST /submit
+router.post(
+  "/submit",
+  passport.authenticate("jwt", { session: false }),
+  feedbackController.submitFeedback
+);
 
-  try {
-    // Mock or real Frill API submission
-    const response = await axios.post(
-      "https://api.frill.co/v1/ideas",
-      {
-        title: `${category} - ${rating}⭐`,
-        body: comment,
-        board_id: process.env.FRILL_BOARD_ID,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.FRILL_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return res
-      .status(200)
-      .json({ message: "Feedback submitted to Frill!", data: response.data });
-  } catch (error) {
-    console.error("Frill API Error:", error.response?.data || error.message);
-    return res
-      .status(500)
-      .json({ message: "Error submitting feedback to Frill" });
-  }
-});
+// Step 5: Protected GET /all
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  feedbackController.getAllFeedback
+);
 
 module.exports = router;

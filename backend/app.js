@@ -1,15 +1,17 @@
 // backend/app.js
 const express = require("express");
-const session = require("express-session");
 const passport = require("passport");
 const cors = require("cors");
-require("./config/passport"); // Passport config
+
+// Load Passport strategies (Google + JWT)
+require("./config/passport");
+require("./config/jwtStrategy");
 
 const feedbackRoutes = require("./routes/feedbackRoutes");
 
 const app = express();
 
-// backend/app.js (update CORS middleware)
+// CORS to allow frontend at localhost:3000
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -17,23 +19,15 @@ app.use(
   })
 );
 
+// Parse JSON body
 app.use(express.json());
 
-// Session middleware
-app.use(
-  session({
-    secret: "secretkey",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
-// Initialize Passport
+// No session usage; purely JWT
 app.use(passport.initialize());
-app.use(passport.session());
 
 // Routes
 app.use("/api/feedback", feedbackRoutes);
+
 app.get("/", (req, res) => res.send("API Running"));
 
 module.exports = app;

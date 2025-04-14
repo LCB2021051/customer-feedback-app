@@ -1,8 +1,9 @@
 // backend/config/passport.js
-require("dotenv").config(); // Add this line at the top
+require("dotenv").config();
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
+// Google OAuth Strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -10,16 +11,11 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/feedback/auth/google/callback",
     },
-    function (accessToken, refreshToken, profile, done) {
-      // Here you can save user to DB if needed
+    async (accessToken, refreshToken, profile, done) => {
+      // Typically, you'd find/create a user in DB here. For now, just pass the profile:
       return done(null, profile);
     }
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+// No serializeUser/deserializeUser needed for JWT-based approach
