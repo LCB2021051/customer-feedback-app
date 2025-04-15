@@ -1,11 +1,12 @@
-1. **Install backend dependencies** and run the server:
+### Backend
 
-   ```bash
-   cd backend
-   npm install
-   node server.js
-   # or nodemon server.js
-   ```
+```bash
+cd backend
+npm install
+npm start
+# or
+# nodemon server.js
+```
 
 2. **Install frontend dependencies** and start React:
    ```bash
