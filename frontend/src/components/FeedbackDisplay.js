@@ -13,10 +13,6 @@ const FeedbackDisplay = () => {
         },
       })
       .then((res) => {
-        // If server returns an array directly:
-        // setFeedback(res.data);
-
-        // If server sometimes returns { message: "...", data: [...] }:
         setFeedback(Array.isArray(res.data) ? res.data : res.data.data);
       })
       .catch((err) => console.error(err));
