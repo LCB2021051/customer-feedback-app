@@ -147,9 +147,3 @@ http://localhost:5000/api/feedback
    - Deploy backend (e.g., Heroku, Render).
    - Deploy frontend (Netlify, Vercel).
    - Configure environment variables accordingly.
-
-With this setup, you have a **secure, modern** stateless system using **Google OAuth**, **JWT** for protected routes, and **Frill** for feedback management!
-
-```
-
-```
