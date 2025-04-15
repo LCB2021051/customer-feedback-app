@@ -3,7 +3,7 @@
 ```bash
 cd backend
 npm install
-npm start
+node server.js
 # or
 # nodemon server.js
 ```
