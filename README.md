@@ -1,4 +1,4 @@
-### Backend
+1. **Install backend dependencies** and start server:
 
 ```bash
 cd backend
