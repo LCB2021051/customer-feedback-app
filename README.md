@@ -1,8 +1,3 @@
-````md
-# README
-
-## 1. Running the Project
-
 1. **Install backend dependencies** and run the server:
    ```bash
    cd backend
@@ -10,6 +5,7 @@
    node server.js
    # or nodemon server.js
    ```
+
 ````
 
 2. **Install frontend dependencies** and start React:
@@ -153,3 +149,4 @@ http://localhost:5000/api/feedback
    - Configure environment variables accordingly.
 
 With this setup, you have a **secure, modern** stateless system using **Google OAuth**, **JWT** for protected routes, and **Frill** for feedback management!
+````
